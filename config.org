@@ -1,0 +1,190 @@
+* Init stuff
+#+begin_src emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+  (package-refresh-contents)
+#+end_src
+
+#+RESULTS:
+
+* Looks
+** Full Emacs looks
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (set-fringe-mode 10)
+#+end_src
+
+#+RESULTS:
+: ((vertical-scroll-bars) (left-fringe . 10) (right-fringe . 10))
+
+
+
+
+
+** Theme stuff
+Dracula is nice i modified the background to make it deep purple
+#+begin_src emacs-lisp
+(use-package dracula-theme ;manage theme
+  :ensure t
+  :init
+  (load-theme 'dracula :NO-CONFIRM)
+  :config
+  (with-eval-after-load "dracula-theme"
+    (custom-theme-set-faces
+     'dracula
+     '(default ((t (:background "#2b0026")))))))
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
+#+begin_src emacs-lisp
+  
+#+end_src
+
+#+RESULTS:
+
+** Textmode look
+
+#+begin_src emacs-lisp
+; (add-hook 'text-mode-hook 'linum-mode)
+#+end_src
+
+#+RESULTS:
+
+** progmode look
+basically adds line count for prog mode
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+end_src
+
+#+RESULTS:
+| electric-pair-mode | company-mode | display-line-numbers-mode |
+
+
+* Prog Stuff
+** LSP
+I decided to use Eglot since its native to Emacs
+#+begin_src emacs-lisp
+;;LSP
+(use-package eglot
+  :config
+;  (add-to-list 'eglot-server-programs
+;	       '((c++-mode c-mode) . "clangd")
+;	       )
+  :hook
+  ((c++-mode . eglot-ensure)
+   (c-mode . eglot-ensure))
+;;meaby add hooks here or add them to specific mode configs
+  )
+#+end_src
+
+#+RESULTS:
+| eglot-ensure |
+
+
+
+`** AutoComplete
+Company mode works for everything and supports multiple backends
+#+begin_src emacs-lisp
+(use-package company                                                
+  :ensure t
+  :config
+ ; (corfu-auto t)
+  :init
+  ;(global-corfu-mode)
+  :hook
+  ((prog-mode . company-mode))
+  )
+#+end_src
+
+#+RESULTS:
+| electric-pair-mode | company-mode | display-line-numbers-mode |
+
+
+
+Electric pair mode adds () "" [] {} in pairs automatically
+#+begin_src emacs-lisp
+;; prog-mode hook
+(add-hook 'prog-mode-hook 'electric-pair-mode)  ;should auto add pairs for () {} [] works enven in comments appearently
+#+end_src
+
+#+RESULTS:
+| electric-pair-mode | company-mode | display-line-numbers-mode |
+** Magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t)
+#+end_src
+
+#+RESULTS:
+
+* Keybindings
+** Global map
+#+begin_src emacs-lisp
+;;Global Key
+(keymap-global-set "s-f" 'next-buffer)
+(keymap-global-set "s-b" 'previous-buffer)
+(keymap-global-set "C-c a" 'org-agenda)
+(keymap-global-set "C-c c" 'org-capture)
+#+end_src
+
+#+RESULTS:
+: org-capture
+
+
+
+* Org-mode config
+** org setup
+#+begin_src emacs-lisp			 
+  ;; org-mode config
+  (setq org-agenda-files '("~/org/")) ;agenda needs to know where to go
+  (setq org-log-done 'time) ;sets time for todo completion
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ;makes all org files org-mode
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "SLEEPING(s@/@)" "ACTIVE(g!)" "DREAMING(d)" "RESEARCH(r@)" "|"  "FINISHED(f!)" "DEAD(x@/@)" )))
+
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'org-bullets-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
+** Capture template
+Captures template and add them automatically to a specific org files for in this case projects ideas and
+simpler Todos in the future it might include stuff like journal entries once I decide to configure it to
+track journal entries
+#+begin_src emacs-lisp
+	    ;;org-capture templates
+	    (setq org-capture-templates
+		  '(
+		    ("p" "Projects Idea"
+		     entry (file+headline "~/org/active.org" "Projects")
+		     "** DREAMING [#C] %?\n:DREAM CAPTURED: %T\n"
+		     :empty-lines 0)
+		    ("t" "Tasks"
+		     entry (file+headline "~/org/active.org" "Tasks")
+		     "** TODO [#B] %?\nDEADLINE: %^T\n:INIT TIME: %T\n"
+		     :empty-lines 0)
+		    ("j" "Journal"
+		     entry (file "~/org/journal.org")
+		     "* Recorded: %T\n%?"
+		     :empty-lines 1
+		     )))
+#+end_src
+
+#+RESULTS:
+| p | Projects Idea | entry | (file+headline ~/org/active.org Projects) | ** DREAMING [#C] %? |
+
+
+
