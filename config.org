@@ -19,10 +19,22 @@
 
 #+RESULTS:
 : ((vertical-scroll-bars) (left-fringe . 10) (right-fringe . 10))
+** Exwm
+Exwm is an emacs based window manager I am trying
+#+begin_src emacs-lisp
+  (use-package exwm
+    :ensure t
+    :init
+    (setq exwm-input-global-keys
+	  '(([s-r].exwm-reset)
+	    ([s-w].exwm-workspace-switch)))
+    :config
+    (exwm-enable)
+    )
+#+end_src
 
-
-
-
+#+RESULTS:
+: t
 
 ** Theme stuff
 Dracula is nice i modified the background to make it deep purple
@@ -66,7 +78,6 @@ basically adds line count for prog mode
 #+RESULTS:
 | electric-pair-mode | company-mode | display-line-numbers-mode |
 
-
 * Prog Stuff
 ** LSP
 I decided to use Eglot since its native to Emacs
@@ -89,7 +100,7 @@ I decided to use Eglot since its native to Emacs
 
 
 
-`** AutoComplete
+** AutoComplete
 Company mode works for everything and supports multiple backends
 #+begin_src emacs-lisp
 (use-package company                                                
@@ -116,7 +127,9 @@ Electric pair mode adds () "" [] {} in pairs automatically
 
 #+RESULTS:
 | electric-pair-mode | company-mode | display-line-numbers-mode |
+
 ** Magit
+Magit is a git interface for Emacs
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
@@ -127,17 +140,16 @@ Electric pair mode adds () "" [] {} in pairs automatically
 * Keybindings
 ** Global map
 #+begin_src emacs-lisp
-;;Global Key
-(keymap-global-set "s-f" 'next-buffer)
-(keymap-global-set "s-b" 'previous-buffer)
-(keymap-global-set "C-c a" 'org-agenda)
-(keymap-global-set "C-c c" 'org-capture)
+    ;;Global Key
+    (keymap-global-set "s-f" 'next-buffer)
+    (keymap-global-set "s-b" 'previous-buffer)
+    (keymap-global-set "C-c a" 'org-agenda)
+    (keymap-global-set "C-c c" 'org-capture)
+  (keymap-global-set "C-c l" 'org-store-link)
 #+end_src
 
 #+RESULTS:
-: org-capture
-
-
+: org-store-link
 
 * Org-mode config
 ** org setup
@@ -148,7 +160,7 @@ Electric pair mode adds () "" [] {} in pairs automatically
   (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ;makes all org files org-mode
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "SLEEPING(s@/@)" "ACTIVE(g!)" "DREAMING(d)" "RESEARCH(r@)" "|"  "FINISHED(f!)" "DEAD(x@/@)" )))
-
+  (setq org-startup-folded t)
   (use-package org-bullets
     :ensure t
     :config
@@ -157,7 +169,6 @@ Electric pair mode adds () "" [] {} in pairs automatically
 
 #+RESULTS:
 : t
-
 
 
 ** Capture template
@@ -185,6 +196,24 @@ track journal entries
 
 #+RESULTS:
 | p | Projects Idea | entry | (file+headline ~/org/active.org Projects) | ** DREAMING [#C] %? |
+** Org-roam
+org roam is way or organising notes within Org-mode that I'm trying
+#+begin_src emacs-lisp
+  ;; will need more setup to not give 200000 errors on launch
+  ;;    (use-package org-roam
+  ;;      :ensure t)
+#+end_src
+
+* Dired
+** dired omit mode
+Removes autosaves from view we need to not forget Emacs creates them
+#+begin_src emacs-lisp
+  (add-hook 'dired-mode-hook 'dired-omit-mode)
+#+end_src
+
+#+RESULTS:
+| dired-extra-startup | (lambda nil (dired-omit-mode 1)) | dired-omit-mode |
+
 
 
 
