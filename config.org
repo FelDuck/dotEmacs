@@ -66,7 +66,6 @@ basically adds line count for prog mode
 #+RESULTS:
 | electric-pair-mode | company-mode | display-line-numbers-mode |
 
-
 * Prog Stuff
 ** LSP
 I decided to use Eglot since its native to Emacs
@@ -89,7 +88,7 @@ I decided to use Eglot since its native to Emacs
 
 
 
-`** AutoComplete
+** AutoComplete
 Company mode works for everything and supports multiple backends
 #+begin_src emacs-lisp
 (use-package company                                                
@@ -116,7 +115,9 @@ Electric pair mode adds () "" [] {} in pairs automatically
 
 #+RESULTS:
 | electric-pair-mode | company-mode | display-line-numbers-mode |
+
 ** Magit
+Magit is a git interface for Emacs
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
