@@ -79,6 +79,7 @@ basically adds line count for prog mode
 | electric-pair-mode | company-mode | display-line-numbers-mode |
 
 * Prog Stuff
+
 ** LSP
 I decided to use Eglot since its native to Emacs
 #+begin_src emacs-lisp
@@ -98,8 +99,6 @@ I decided to use Eglot since its native to Emacs
 #+RESULTS:
 | eglot-ensure |
 
-
-
 ** AutoComplete
 Company mode works for everything and supports multiple backends
 #+begin_src emacs-lisp
@@ -117,16 +116,29 @@ Company mode works for everything and supports multiple backends
 #+RESULTS:
 | electric-pair-mode | company-mode | display-line-numbers-mode |
 
-
-
-Electric pair mode adds () "" [] {} in pairs automatically
+C# setup
 #+begin_src emacs-lisp
-;; prog-mode hook
-(add-hook 'prog-mode-hook 'electric-pair-mode)  ;should auto add pairs for () {} [] works enven in comments appearently
+  (use-package omnisharp
+    :after company
+    :config
+    (add-hook 'csharp-mode-hook 'omnisharp-mode)
+    (add-to-list 'company-backends 'company-omnisharp))
 #+end_src
 
 #+RESULTS:
-| electric-pair-mode | company-mode | display-line-numbers-mode |
+: t
+
+
+Electric pair mode adds () "" [] {} in pairs automatically
+flycheck mode should autocheck for me
+#+begin_src emacs-lisp
+  ;; prog-mode hook
+  (add-hook 'prog-mode-hook 'electric-pair-mode)  ;should auto add pairs for () {} [] works enven in comments appearently
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+#+end_src
+
+#+RESULTS:
+| flycheck-mode | electric-pair-mode | company-mode | display-line-numbers-mode |
 
 ** Magit
 Magit is a git interface for Emacs
@@ -161,7 +173,7 @@ Magit is a git interface for Emacs
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "SLEEPING(s@/@)" "ACTIVE(g!)" "DREAMING(d)" "RESEARCH(r@)" "|"  "FINISHED(f!)" "DEAD(x@/@)" )))
   (setq org-startup-folded t)
-  (use-package org-bullets
+  (use-package org-bullets ;pretty org bullets
     :ensure t
     :config
     (add-hook 'org-mode-hook 'org-bullets-mode))
@@ -169,7 +181,6 @@ Magit is a git interface for Emacs
 
 #+RESULTS:
 : t
-
 
 ** Capture template
 Captures template and add them automatically to a specific org files for in this case projects ideas and
@@ -189,7 +200,7 @@ track journal entries
 		     :empty-lines 0)
 		    ("j" "Journal"
 		     entry (file "~/org/journal.org")
-		     "* Recorded: %T\n%?"
+		     "* Recorded: %t \n%?"
 		     :empty-lines 1
 		     )))
 #+end_src
