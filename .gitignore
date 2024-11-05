@@ -1,0 +1,17 @@
+/%backup%~
+/.cache/
+/.lsp-session-v1
+/auto-save-list/
+/bookmarks
+/bookmarks~
+/config.el
+/dir
+/dir~
+/eln-cache/
+/elpa/
+/eshell/
+/init.el~
+/session.
+/tramp
+/transient/
+/session*

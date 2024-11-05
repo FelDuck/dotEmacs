@@ -29,12 +29,11 @@ Exwm is an emacs based window manager I am trying
 	  '(([s-r].exwm-reset)
 	    ([s-w].exwm-workspace-switch)))
     :config
-    (exwm-enable)
+;    (exwm-enable)
     )
 #+end_src
 
 #+RESULTS:
-: t
 
 ** Theme stuff
 Dracula is nice i modified the background to make it deep purple
@@ -76,24 +75,39 @@ basically adds line count for prog mode
 #+end_src
 
 #+RESULTS:
-| electric-pair-mode | company-mode | display-line-numbers-mode |
+| flycheck-mode | electric-pair-mode | company-mode | display-line-numbers-mode |
 
 * Prog Stuff
+** Rust
+#+begin_src emacs-lisp
+    (use-package rustic
+      :ensure t
+      :config
+      )
+#+end_src
+
+#+RESULTS:
 
 ** LSP
 I decided to use Eglot since its native to Emacs
 #+begin_src emacs-lisp
-;;LSP
-(use-package eglot
-  :config
-;  (add-to-list 'eglot-server-programs
-;	       '((c++-mode c-mode) . "clangd")
-;	       )
-  :hook
-  ((c++-mode . eglot-ensure)
-   (c-mode . eglot-ensure))
-;;meaby add hooks here or add them to specific mode configs
-  )
+	;LSP-mode has some compatibility things for Rust-analyser sooooo
+	(use-package lsp-mode
+	  :ensure
+	  )
+
+  (use-package eglot
+	    :config
+	  ;  (add-to-list 'eglot-server-programs
+	  ;	       '((c++-mode c-mode) . "clangd")
+	  ;	       )
+
+	    :hook
+	    ((c++-mode . eglot-ensure)
+	     (c-mode . eglot-ensure)
+	  ;;meaby add hooks here or add them to specific mode configs
+	    )
+	    )
 #+end_src
 
 #+RESULTS:
@@ -114,19 +128,7 @@ Company mode works for everything and supports multiple backends
 #+end_src
 
 #+RESULTS:
-| electric-pair-mode | company-mode | display-line-numbers-mode |
-
-C# setup
-#+begin_src emacs-lisp
-  (use-package omnisharp
-    :after company
-    :config
-    (add-hook 'csharp-mode-hook 'omnisharp-mode)
-    (add-to-list 'company-backends 'company-omnisharp))
-#+end_src
-
-#+RESULTS:
-: t
+| flycheck-mode | electric-pair-mode | company-mode | display-line-numbers-mode |
 
 
 Electric pair mode adds () "" [] {} in pairs automatically
@@ -149,7 +151,7 @@ Magit is a git interface for Emacs
 
 #+RESULTS:
 
-* Keybindings
+* Global Keybindings
 ** Global map
 #+begin_src emacs-lisp
     ;;Global Key
@@ -160,8 +162,6 @@ Magit is a git interface for Emacs
   (keymap-global-set "C-c l" 'org-store-link)
 #+end_src
 
-#+RESULTS:
-: org-store-link
 
 * Org-mode config
 ** org setup
@@ -181,7 +181,6 @@ Magit is a git interface for Emacs
 
 #+RESULTS:
 : t
-
 ** Capture template
 Captures template and add them automatically to a specific org files for in this case projects ideas and
 simpler Todos in the future it might include stuff like journal entries once I decide to configure it to
@@ -215,7 +214,21 @@ org roam is way or organising notes within Org-mode that I'm trying
   ;;      :ensure t)
 #+end_src
 
-* Dired
+#+RESULTS:
+** Org-Keymap
+#+begin_src emacs-lisp
+     (with-eval-after-load "org"
+       (define-key org-mode-map (kbd "C-c t")
+		   (defalias 'mf-org-table-copy-cell-at-point
+  (kmacro "C-r | <return> C-f C-SPC C-s | C-b C-b C-w C-y"))
+		   )
+       )
+#+end_src
+
+#+RESULTS:
+: mf-org-table-copy-cell-at-point
+
+* Diredo
 ** dired omit mode
 Removes autosaves from view we need to not forget Emacs creates them
 #+begin_src emacs-lisp
@@ -223,8 +236,15 @@ Removes autosaves from view we need to not forget Emacs creates them
 #+end_src
 
 #+RESULTS:
-| dired-extra-startup | (lambda nil (dired-omit-mode 1)) | dired-omit-mode |
+| dired-extra-startup | dired-omit-mode |
+* Info
+lets me set up ~/info as a source of additionnal manual for info mode
+#+begin_src emacs-lisp
+    (add-hook 'Info-mode-hook
+	      (lambda()
+	      (setq Info-additional-directory-list Info-default-directory-list)
+	      ))
+#+end_src
 
-
-
-
+#+RESULTS:
+| (lambda nil (setq Info-additional-directory-list Info-default-directory-list)) | turn-on-font-lock |
