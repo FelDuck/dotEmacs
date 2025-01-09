@@ -1,9 +1,13 @@
 * Init stuff
 #+begin_src emacs-lisp
-  (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-  (package-refresh-contents)
+    (require 'package)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    (package-initialize)
+    (package-refresh-contents)
+    (unless (package-installed-p 'exec-path-from-shell )
+      (package-install 'exec-path-from-shell))
+    (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
 #+end_src
 
 #+RESULTS:
@@ -74,10 +78,18 @@ basically adds line count for prog mode
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 #+end_src
 
-#+RESULTS:
-| flycheck-mode | electric-pair-mode | company-mode | display-line-numbers-mode |
 
 * Prog Stuff
+** Python
+#+begin_src emacs-lisp
+	    (use-package elpy
+	      :ensure t
+	      :config (elpy-enable)
+	      :hook (python-mode . elpy-mode))
+#+end_src
+
+#+RESULTS:
+
 ** Rust
 #+begin_src emacs-lisp
     (use-package rustic
@@ -151,6 +163,12 @@ Magit is a git interface for Emacs
 
 #+RESULTS:
 
+** Javascript
+#+begin_src emacs-lisp
+
+#+end_src
+
+
 * Global Keybindings
 ** Global map
 #+begin_src emacs-lisp
@@ -173,6 +191,7 @@ Magit is a git interface for Emacs
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "SLEEPING(s@/@)" "ACTIVE(g!)" "DREAMING(d)" "RESEARCH(r@)" "|"  "FINISHED(f!)" "DEAD(x@/@)" )))
   (setq org-startup-folded t)
+  (add-hook 'org-mode-hook 'display-line-numbers-mode)
   (use-package org-bullets ;pretty org bullets
     :ensure t
     :config
@@ -186,22 +205,25 @@ Captures template and add them automatically to a specific org files for in this
 simpler Todos in the future it might include stuff like journal entries once I decide to configure it to
 track journal entries
 #+begin_src emacs-lisp
-	    ;;org-capture templates
-	    (setq org-capture-templates
-		  '(
-		    ("p" "Projects Idea"
-		     entry (file+headline "~/org/active.org" "Projects")
-		     "** DREAMING [#C] %?\n:DREAM CAPTURED: %T\n"
-		     :empty-lines 0)
-		    ("t" "Tasks"
-		     entry (file+headline "~/org/active.org" "Tasks")
-		     "** TODO [#B] %?\nDEADLINE: %^T\n:INIT TIME: %T\n"
-		     :empty-lines 0)
-		    ("j" "Journal"
-		     entry (file "~/org/journal.org")
-		     "* Recorded: %t \n%?"
-		     :empty-lines 1
-		     )))
+		    ;;org-capture templates
+		    (setq org-capture-templates
+			  '(
+			    ("p" "Projects Idea"
+			     entry (file+headline "~/org/active.org" "Projects")
+			     "** DREAMING [#C] %?\n:DREAM CAPTURED: %T\n"
+			     :empty-lines 0)
+			    ("t" "Tasks"
+			     entry (file+headline "~/org/active.org" "Tasks")
+			     "** TODO [#B] %?\nDEADLINE: %^T\n:INIT TIME: %T\n"
+			     :empty-lines 0)
+			    ("j" "Journal"
+			     entry (file "~/org/journal.org")
+			     "* Recorded: %t \n%?"
+			     :empty-lines 1)
+			    ("w" "Work notes"
+			     entry (file+headline "~/Work/workfile.org" "Notes")
+			     "** %T\n%?"
+			     :empty-lines 0)))
 #+end_src
 
 #+RESULTS:
@@ -228,7 +250,7 @@ org roam is way or organising notes within Org-mode that I'm trying
 #+RESULTS:
 : mf-org-table-copy-cell-at-point
 
-* Diredo
+* Dired
 ** dired omit mode
 Removes autosaves from view we need to not forget Emacs creates them
 #+begin_src emacs-lisp
