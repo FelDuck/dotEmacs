@@ -240,6 +240,7 @@ org roam is way or organising notes within Org-mode that I'm trying
 ** Org-Keymap
 #+begin_src emacs-lisp
      (with-eval-after-load "org"
+       (require 'ox-md)
        (define-key org-mode-map (kbd "C-c t")
 		   (defalias 'mf-org-table-copy-cell-at-point
   (kmacro "C-r | <return> C-f C-SPC C-s | C-b C-b C-w C-y"))
